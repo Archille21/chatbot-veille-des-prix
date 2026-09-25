@@ -111,7 +111,7 @@ def check_price() -> float:
 
 def run_sniper():
     print(f"🚀 Bot Price Sniper démarré ! (Vérification toutes les {CHECK_INTERVAL_HOURS} heures)")
-    send_telegram_message(f"🚀 *Price Sniper Actif*\nSurveillance lancée pour : `{PRODUCT_NAME}`\nPrix cible : *{TARGET_PRICE:,.0f} FCFA*")
+    # Le message de démarrage Telegram a été supprimé pour éviter les spams au redémarrage du serveur
 
     while True:
         current_price = check_price()
@@ -119,10 +119,10 @@ def run_sniper():
         if current_price > 0:
             print(f"📊 Prix actuel : {current_price:,.0f} FCFA | Prix Cible : {TARGET_PRICE:,.0f} FCFA")
             
-            # Sauvegarde en BDD
+            # Sauvegarde dans Neon
             save_to_neon(PRODUCT_NAME, GLOTELHO_URL, current_price, TARGET_PRICE)
 
-            # Alerte si le prix est inférieur ou égal à la cible
+            # Alerte Telegram UNIQUEMENT si le prix est inférieur ou égal à la cible
             if current_price <= TARGET_PRICE:
                 msg = (
                     f"🎯 *ALERTE BONNE AFFAIRE !*\n\n"
@@ -133,11 +133,12 @@ def run_sniper():
                 )
                 send_telegram_message(msg)
             else:
-                print("ℹ️ Le prix reste au-dessus du prix cible. Pas de notification d'alerte envoyée.")
+                print("ℹ️ Le prix reste au-dessus du prix cible. Pas de notification envoyée.")
         else:
             print("⚠️ Impossible d'obtenir le prix lors de cette session.")
 
-        # Pause de 6 heures (21 600 secondes)
+        # Pause stricte de 6 heures (21 600 secondes)
+        print(f"💤 Mise en veille pour {CHECK_INTERVAL_HOURS} heures...")
         time.sleep(CHECK_INTERVAL_HOURS * 3600)
 
 
