@@ -1,0 +1,5 @@
+[providers]
+python = "python"
+
+[phases.setup]
+nixPkgs = ["...", "playwright-driver"]
